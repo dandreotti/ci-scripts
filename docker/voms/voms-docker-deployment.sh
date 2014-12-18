@@ -29,7 +29,7 @@ if [ -z "${SKIP_MYPROXY}" ]; then
   docker run -d \
     -h myproxy-server \
     --name myproxy-server \
-    italiangrid:myproxy-server
+    italiangrid/myproxy-server
 fi
 
 # run VOMS deployment
@@ -40,7 +40,7 @@ if [ -z "${SKIP_SERVER}" ]; then
     -v /sync \
     -h voms-server \
     --name voms-server \
-    italiangrid:voms-deployment-test
+    italiangrid/voms-deployment-test
 fi
 
 # run VOMS testsuite when deployment is over
@@ -63,7 +63,7 @@ docker run \
   --volumes-from voms-server \
   --link voms-server:voms-server \
   --link myproxy-server:myproxy-server \
-  italiangrid:voms-ts
+  italiangrid/voms-ts
 
 testsuite_retval=$?
 
