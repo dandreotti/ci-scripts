@@ -26,6 +26,10 @@ EXCLUDE_TESTS=${EXCLUDE_TESTS:-""}
 
 DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-""}
 
+remove_container(){
+  docker rm -f -v $1 || >&2 echo "Error removing container... Either the container does not exist or there is an error in docker."
+}
+
 if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
   REGISTRY_PREFIX=${DOCKER_REGISTRY_HOST}/
 else
@@ -34,6 +38,7 @@ fi
 
 # Start myproxy server
 if [ -z "${SKIP_MYPROXY}" ]; then
+  remove_container myproxy-server
   docker run -d \
     -h myproxy-server \
     --name myproxy-server \
@@ -42,6 +47,7 @@ fi
 
 # run VOMS deployment
 if [ -z "${SKIP_SERVER}" ]; then
+  remove_container voms-server
   docker run -d \
     -e "MODE=${MODE}" \
     -e "PLATFORM=${PLATFORM}" \
@@ -51,6 +57,8 @@ if [ -z "${SKIP_SERVER}" ]; then
     --name voms-server \
     ${REGISTRY_PREFIX}italiangrid/voms-deployment-test
 fi
+
+remove_container voms-ts
 
 # run VOMS testsuite when deployment is over
 docker run \
@@ -83,13 +91,10 @@ if [ -z "${SKIP_SERVER}" ]; then
   docker cp voms-server:/var/log/voms logs
   docker cp voms-server:/var/log/voms-admin logs
   docker logs --tail="all" voms-server &> deployment.log
-  docker rm -f voms-server
 fi
 
 # Get testsuite logs & shutdown container
 docker cp voms-ts:/home/voms/voms-testsuite/reports .
 docker logs --tail="all" voms-ts &> testsuite.log
-docker rm -f voms-ts
-docker rm -f myproxy-server
 
 exit ${testsuite_retval}
