@@ -46,6 +46,7 @@ if [ -z "${SKIP_SERVER}" ]; then
     -e "MODE=${MODE}" \
     -e "PLATFORM=${PLATFORM}" \
     -v /sync \
+    -v /var/log \
     -h voms-server \
     --name voms-server \
     ${REGISTRY_PREFIX}italiangrid/voms-deployment-test
