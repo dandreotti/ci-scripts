@@ -24,12 +24,20 @@ MYPROXY_PASSWORD=${MYPROXY_PASSWORD:-123456}
 INCLUDE_TESTS=${INCLUDE_TESTS:-""}
 EXCLUDE_TESTS=${EXCLUDE_TESTS:-""}
 
+DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-""}
+
+if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
+  REGISTRY_PREFIX=${DOCKER_REGISTRY_HOST}/
+else
+  REGISTRY_PREFIX=""
+fi
+
 # Start myproxy server
 if [ -z "${SKIP_MYPROXY}" ]; then
   docker run -d \
     -h myproxy-server \
     --name myproxy-server \
-    italiangrid/myproxy-server
+    ${REGISTRY_PREFIX}italiangrid/myproxy-server
 fi
 
 # run VOMS deployment
@@ -40,7 +48,7 @@ if [ -z "${SKIP_SERVER}" ]; then
     -v /sync \
     -h voms-server \
     --name voms-server \
-    italiangrid/voms-deployment-test
+    ${REGISTRY_PREFIX}italiangrid/voms-deployment-test
 fi
 
 # run VOMS testsuite when deployment is over
@@ -63,7 +71,7 @@ docker run \
   --volumes-from voms-server \
   --link voms-server:voms-server \
   --link myproxy-server:myproxy-server \
-  italiangrid/voms-ts
+  ${REGISTRY_PREFIX}italiangrid/voms-ts
 
 testsuite_retval=$?
 
