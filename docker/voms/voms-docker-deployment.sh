@@ -27,7 +27,8 @@ EXCLUDE_TESTS=${EXCLUDE_TESTS:-""}
 DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-""}
 
 remove_container(){
-  docker rm -f -v $1 || >&2 echo "Error removing container... Either the container does not exist or there is an error in docker."
+  docker rm -f -v $1 || >&2 echo \
+    "Container $1 does not exist or there was an error removing it."
 }
 
 if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
@@ -52,7 +53,6 @@ if [ -z "${SKIP_SERVER}" ]; then
     -e "MODE=${MODE}" \
     -e "PLATFORM=${PLATFORM}" \
     -v /sync \
-    -v /var/log \
     -h voms-server \
     --name voms-server \
     ${REGISTRY_PREFIX}italiangrid/voms-deployment-test
@@ -88,13 +88,13 @@ testsuite_retval=$?
 if [ -z "${SKIP_SERVER}" ]; then
   # copy VOMS server logs
   mkdir logs
-  docker cp voms-server:/var/log/voms logs
-  docker cp voms-server:/var/log/voms-admin logs
+  docker cp voms-server:/var/log/voms/ logs
+  docker cp voms-server:/var/log/voms-admin/ logs
   docker logs --tail="all" voms-server &> deployment.log
 fi
 
 # Get testsuite logs & shutdown container
-docker cp voms-ts:/home/voms/voms-testsuite/reports .
+docker cp voms-ts:/home/voms/voms-testsuite/reports/ ./
 docker logs --tail="all" voms-ts &> testsuite.log
 
 exit ${testsuite_retval}
