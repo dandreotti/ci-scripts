@@ -94,7 +94,7 @@ if [ -z "${SKIP_SERVER}" ]; then
 fi
 
 # Get testsuite logs & shutdown container
-docker cp voms-ts:/home/voms/voms-testsuite/reports/ ./
+docker cp voms-ts:/home/voms/voms-testsuite/reports $(pwd)
 docker logs --tail="all" voms-ts &> testsuite.log
 
 exit ${testsuite_retval}
