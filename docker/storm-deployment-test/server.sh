@@ -14,8 +14,12 @@ else
 fi
 
 TEST_ID=$(mktemp -u storm-XXXXXX)
-storage_dir=${STORAGE_PREFIX}/storage-$MODE-$PLATFORM-$TEST_ID
+
+storage_dir=${STORAGE_PREFIX}/$MODE-$PLATFORM-$TEST_ID-storage
+gridmap_dir=${STORAGE_PREFIX}/$MODE-$PLATFORM-$TEST_ID-gridmapdir
+
 mkdir -p $storage_dir
+mkdir -p $gridmap_dir
 
 # Grab latest images
 docker pull ${REGISTRY_PREFIX}italiangrid/storm-deployment-test
@@ -25,6 +29,7 @@ docker pull ${REGISTRY_PREFIX}italiangrid/storm-testsuite
 deploy_id=`docker run -d -e "STORM_REPO=${STORM_REPO}" -e "MODE=${MODE}" -e "PLATFORM=${PLATFORM}" \
   -h docker-storm.cnaf.infn.it \
   -v $storage_dir:/storage:rw \
+  -v $gridmap_dir:/etc/grid-security/gridmapdir:rw \
   -v /etc/localtime:/etc/localtime:ro \
   ${REGISTRY_PREFIX}italiangrid/storm-deployment-test \
   /bin/sh deploy.sh`
@@ -49,8 +54,8 @@ docker cp $deployment_name:/var/log/storm $(pwd)
 docker logs --tail="all" $deployment_name &> storm-deployment.log
 
 # remove containers
-docker rm -f $deployment_name
-docker rm -f $testsuite_name
+docker rm -fv $deployment_name
+docker rm -fv $testsuite_name
 
 # remove storage files
 rm -rf ${storage_dir}
