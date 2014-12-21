@@ -5,7 +5,7 @@ MODE="${MODE:-clean}"
 PLATFORM="${PLATFORM:-SL6}"
 STORM_REPO="${STORM_REPO:-http://radiohead.cnaf.infn.it:9999/view/REPOS/job/repo_storm_develop_SL6/lastSuccessfulBuild/artifact/storm_develop_sl6.repo}"
 DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-""}
-STORAGE_PREFIX=${STORAGE_PREFIX:-/media/eph0}
+STORAGE_PREFIX=${STORAGE_PREFIX:-/storage}
 
 if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
   REGISTRY_PREFIX=${DOCKER_REGISTRY_HOST}/
