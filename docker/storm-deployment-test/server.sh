@@ -17,6 +17,10 @@ TEST_ID=$(mktemp -u storm-XXXXXX)
 storage_dir=${STORAGE_PREFIX}/storage-$MODE-$PLATFORM-$TEST_ID
 mkdir -p $storage_dir
 
+# Grab latest images
+docker pull ${REGISTRY_PREFIX}italiangrid/storm-deployment-test
+docker pull ${REGISTRY_PREFIX}italiangrid/storm-testsuite
+
 # run StoRM deployment and get container id
 deploy_id=`docker run -d -e "STORM_REPO=${STORM_REPO}" -e "MODE=${MODE}" -e "PLATFORM=${PLATFORM}" \
   -h docker-storm.cnaf.infn.it \
