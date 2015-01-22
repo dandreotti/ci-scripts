@@ -45,7 +45,7 @@ docker run --link $deployment_name:docker-storm.cnaf.infn.it \
   ${REGISTRY_PREFIX}italiangrid/storm-testsuite
 
 # copy testsuite reports
-docker cp $testsuite_name:/home/tester/storm-testsuite/reports $(pwd)
+docker cp $testsuite_name:/home/tester/storm-testsuite/reports `pwd`
 
 # copy StoRM logs
 docker cp $deployment_name:/var/log/storm $(pwd)
