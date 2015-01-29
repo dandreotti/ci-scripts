@@ -1,6 +1,26 @@
 #!/bin/bash
 set -ex
 
+function cleanup(){
+  # copy testsuite reports
+  docker cp $testsuite_name:/home/tester/storm-testsuite/reports $(pwd)
+
+  # copy StoRM logs
+  docker cp $deployment_name:/var/log/storm $(pwd)
+
+  # get deployment log
+  docker logs --tail="all" $deployment_name &> storm-deployment.log
+
+  # remove containers
+  docker rm -fv $deployment_name
+  docker rm -fv $testsuite_name
+
+  # remove storage files
+  rm -rf ${storage_dir}
+}
+
+trap cleanup EXIT
+
 MODE="${MODE:-clean}"
 PLATFORM="${PLATFORM:-SL6}"
 STORM_REPO="${STORM_REPO:-http://radiohead.cnaf.infn.it:9999/view/REPOS/job/repo_storm_develop_SL6/lastSuccessfulBuild/artifact/storm_develop_sl6.repo}"
@@ -44,18 +64,4 @@ docker run --link $deployment_name:docker-storm.cnaf.infn.it \
   --name $testsuite_name \
   ${REGISTRY_PREFIX}italiangrid/storm-testsuite
 
-# copy testsuite reports
-docker cp $testsuite_name:/home/tester/storm-testsuite/reports $(pwd)
 
-# copy StoRM logs
-docker cp $deployment_name:/var/log/storm $(pwd)
-
-# get deployment log
-docker logs --tail="all" $deployment_name &> storm-deployment.log
-
-# remove containers
-docker rm -fv $deployment_name
-docker rm -fv $testsuite_name
-
-# remove storage files
-rm -rf ${storage_dir}
