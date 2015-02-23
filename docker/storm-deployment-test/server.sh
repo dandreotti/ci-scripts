@@ -3,20 +3,20 @@ set -ex
 
 function cleanup(){
   # copy testsuite reports
-  docker cp $testsuite_name:/home/tester/storm-testsuite/reports $(pwd)
+  docker cp $testsuite_name:/home/tester/storm-testsuite/reports $(pwd) || echo "Cannot copy tests report"
 
   # copy StoRM logs
-  docker cp $deployment_name:/var/log/storm $(pwd)
+  docker cp $deployment_name:/var/log/storm $(pwd) || echo "Cannot copy StoRM logs"
 
   # get deployment log
-  docker logs --tail="all" $deployment_name &> storm-deployment.log
+  docker logs --tail="all" $deployment_name &> storm-deployment.log || echo "Cannot get the deployment log"
 
   # remove containers
-  docker rm -fv $deployment_name
-  docker rm -fv $testsuite_name
+  docker rm -fv $deployment_name || echo "Cannot remove the deployment container"
+  docker rm -fv $testsuite_name || echo "Cannot remove the testsuite container"
 
   # remove storage files
-  rm -rf ${storage_dir}
+  rm -rf ${storage_dir} || echo "Cannot remove the storage dir"
 }
 
 trap cleanup EXIT
