@@ -14,11 +14,11 @@ users:
   coreos-ssh-import-github: dandreotti
 write_files:
 - path: /etc/sysctl.d/disable_hardlink_protection.conf
-  permissions: 420
+  permissions: 0644
   content: |
     fs.protected_hardlinks=0
 - path: /etc/ssl/certs/igi-test-ca.pem
-  permissions: 420
+  permissions: 0644
   content: |
     -----BEGIN CERTIFICATE-----
     MIIDgDCCAmigAwIBAgIJAMzDwAv7o5VUMA0GCSqGSIb3DQEBBQUAMC0xCzAJBgNV
@@ -47,7 +47,6 @@ coreos:
   etcd:
     addr: $public_ipv4:4001
     peer-addr: $public_ipv4:7001
-    discovery: https://discovery.etcd.io/03744a48330737dbc46247d51e0eaa09
   fleet:
     public-ip: $public_ipv4
   units:
