@@ -45,8 +45,8 @@ coreos:
   update:
     reboot-strategy: off
   etcd:
-    addr: $public_ipv4:4001
-    peer-addr: $public_ipv4:7001
+    addr: $private_ipv4:4001
+    peer-addr: $private_ipv4:7001
   fleet:
     public-ip: $public_ipv4
   units:
