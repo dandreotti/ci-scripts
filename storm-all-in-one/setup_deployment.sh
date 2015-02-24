@@ -18,6 +18,7 @@ STORM_DEPLOYMENT_TEST_REPO=${STORM_DEPLOYMENT_TEST_REPO:-https://github.com/ital
 STORM_DEPLOYMENT_TEST_BRANCH=${STORM_DEPLOYMENT_TEST_BRANCH:-master}
 SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=false -i $JENKINS_SLAVE_PRIVATE_KEY"
 STORM_REPO="${REPO_URL}_$(echo $PLATFORM | tr '[:upper:]' '[:lower:]').repo"
+STORM_DB_PASSWORD=${STORM_DB_PASSWORD:-}
 
 chmod 400 ${JENKINS_SLAVE_PRIVATE_KEY}
 
@@ -29,7 +30,8 @@ git checkout $STORM_DEPLOYMENT_TEST_BRANCH
 cd storm-deployment-test
 export STORM_REPO=${STORM_REPO}
 export PATH=$PATH:/sbin:/usr/sbin
-sh ./$MODE-deployment_$PLATFORM.sh
+chmod +x ./$MODE-deployment_$PLATFORM.sh
+STORM_DB_PASSWORD=$STORM_DB_PASSWORD ./$MODE-deployment_$PLATFORM.sh
 EOF
 
 scp ${SSH_OPTIONS} deploy_storm.sh ${EC2_USER}@${MACHINE_HOSTNAME}:
