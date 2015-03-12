@@ -152,6 +152,7 @@ coreos:
       ExecStartPre=/usr/bin/docker pull cloud-vm128.cloud.cnaf.infn.it/italiangrid/jenkins-slave
       ExecStart=/usr/bin/docker run --name jenkins-slave -p 2222:22 -v /var/run/docker.sock:/var/run/docker.sock -v /media/eph0:/storage:rw cloud-vm128.cloud.cnaf.infn.it/italiangrid/jenkins-slave
       ExecStop=/usr/bin/docker stop jenkins-slave
+      Restart=always
 
       [Install]
       WantedBy=multi-user.target
