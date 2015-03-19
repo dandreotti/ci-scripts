@@ -38,7 +38,8 @@ RETRY_COUNT=60
 chmod 400 $JENKINS_SLAVE_PRIVATE_KEY
 
 # Download the cloud-config file
-wget --no-check-certificate https://raw.githubusercontent.com/italiangrid/ci-scripts/master/openstack/coreos-cloudinit/user-data.yml -O ./user-data.yml
+#wget --no-check-certificate https://raw.githubusercontent.com/italiangrid/ci-scripts/master/openstack/coreos-cloudinit/user-data.yml -O ./user-data.yml
+wget --no-check-certificate https://www.dropbox.com/s/us7dfqmjwdlqhmm/user-data.yml?dl=0 -O ./user-data.yml
 download_status=$?
 
 if [ ${download_status} -ne 0 ]; then
