@@ -9,7 +9,7 @@ terminate() {
 }
 
 ## Image, IP, flavour, etc... for VM that will be started
-MACHINE_IMAGE=${MACHINE_IMAGE:-CoreOS Beta}
+MACHINE_IMAGE=${MACHINE_IMAGE:-CoreOS_Beta}
 MACHINE_NAME=${MACHINE_NAME:-cloud-vm178}
 MACHINE_HOSTNAME=${MACHINE_NAME}.cloud.cnaf.infn.it
 MACHINE_IP=${MACHINE_IP}
