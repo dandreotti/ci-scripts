@@ -48,6 +48,7 @@ fi
 
 # Substitute the real token for docker registry authentication
 sed -i 's@auth": ""@auth": "${DOCKER_REGISTRY_AUTH_TOKEN}"@g' ./user-data.yml
+cat ./user-data.yml
 
 # delete running machine
 echo "Deleting machine $MACHINE_NAME"
