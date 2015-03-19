@@ -18,6 +18,7 @@ MACHINE_FLAVOR=${MACHINE_FLAVOR:-cnaf.medium.plus}
 MACHINE_SECGROUPS=${MACHINE_SECGROUPS:-jenkins-slave}
 
 DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL:-http://cloud-vm128.cloud.cnaf.infn.it}
+DOCKER_REGISTRY_AUTH_TOKEN=${DOCKER_REGISTRY_AUTH_TOKEN}
 
 ## nova client environment
 export OS_USERNAME=${OS_USERNAME}
@@ -44,6 +45,9 @@ if [ ${download_status} -ne 0 ]; then
   echo "Cannot download the config file for setting up the machine, quitting..."
   exit 1
 fi
+
+# Substitute the real token for docker registry authentication
+sed -i 's@auth": ""@auth": "${DOCKER_REGISTRY_AUTH_TOKEN}"@g' ./user-data.yml
 
 # delete running machine
 del_output=$(nova delete $MACHINE_NAME)
@@ -114,9 +118,4 @@ while [ ${ssh_status} -ne 0 ]; do
   ssh_status=$?
 done
 
-echo "Instance started succesfully. Setting up authentication."
-
-ssh -tt ${SSH_OPTIONS} jenkins@${MACHINE_HOSTNAME} "docker login --password=${DOCKER_REGISTRY_PWD} --username="jenkins" --email=" " ${DOCKER_REGISTRY_URL}"
-[ $? -ne 0 ] && terminate "Error during provisioning."
-
-echo "Machine provisioned succesfully."
+echo "Instance started succesfully."
