@@ -47,7 +47,7 @@ if [ ${download_status} -ne 0 ]; then
 fi
 
 # Substitute the real token for docker registry authentication
-sed -i 's@auth": ""@auth": "${DOCKER_REGISTRY_AUTH_TOKEN}"@g' ./user-data.yml
+sed -i 's@auth": ""@auth": "'${DOCKER_REGISTRY_AUTH_TOKEN}'"@g' ./user-data.yml
 
 # delete running machine
 del_output=$(nova delete $MACHINE_NAME)
