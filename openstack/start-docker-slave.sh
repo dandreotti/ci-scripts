@@ -31,7 +31,7 @@ export OS_AUTH_URL=${OS_AUTH_URL}
 NO_SERVER_MSG="No server with a name or ID of"
 DEL_SLEEP_PERIOD=30
 EC2_USER=${EC2_USER:-core}
-SSH_OPTIONS="-p2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=false -i $JENKINS_SLAVE_PRIVATE_KEY"
+SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=false -i $JENKINS_SLAVE_PRIVATE_KEY"
 RETRY_COUNT=60
 
 # Change permissions on private key
